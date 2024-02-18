@@ -1,0 +1,99 @@
+{{
+  "3": {{
+    "inputs": {{
+      "seed": {seed},
+      "steps": 10,
+      "cfg": 2,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "4",
+        0
+      ],
+      "positive": [
+        "10",
+        0
+      ],
+      "negative": [
+        "11",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    }},
+    "class_type": "KSampler"
+  }},
+  "4": {{
+    "inputs": {{
+      "ckpt_name": "dreamshaperXL_v2TurboDpmppSDE.safetensors"
+    }},
+    "class_type": "CheckpointLoaderSimple"
+  }},
+  "5": {{
+    "inputs": {{
+      "width": 904,
+      "height": 1344,
+      "batch_size": 1
+    }},
+    "class_type": "EmptyLatentImage"
+  }},
+  "8": {{
+    "inputs": {{
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    }},
+    "class_type": "VAEDecode"
+  }},
+  "10": {{
+    "inputs": {{
+      "width": 904,
+      "height": 1344,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 904,
+      "target_height": 1344,
+      "text_g": "{positive_prompt}",
+      "text_l": "{positive_prompt}",
+      "clip": [
+        "4",
+        1
+      ]
+    }},
+    "class_type": "CLIPTextEncodeSDXL"
+  }},
+  "11": {{
+    "inputs": {{
+      "width": 904,
+      "height": 1344,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 904,
+      "target_height": 1344,
+      "text_g": "{negative_prompt}",
+      "text_l": "{negative_prompt}",
+      "clip": [
+        "4",
+        1
+      ]
+    }},
+    "class_type": "CLIPTextEncodeSDXL"
+  }},
+  "12": {{
+    "inputs": {{
+      "images": [
+        "8",
+        0
+      ]
+    }},
+    "class_type": "PreviewImage"
+  }}
+}}
