@@ -1,2 +1,6 @@
 from .imagine import ImagineCog
-from .imagine_faceswap import ImagineFaceSwapCog
+
+try:
+    from .imagine_faceswap import ImagineFaceSwapCog
+except ModuleNotFoundError:
+    pass

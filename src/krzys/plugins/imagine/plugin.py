@@ -9,5 +9,5 @@ class Plugin(krzys.core.Plugin):
         try:
             import krzys.plugins.face_swap
             await self.bot.add_cog(cogs.ImagineFaceSwapCog(self.bot))
-        except ImportError:
+        except ModuleNotFoundError:
             pass
