@@ -50,7 +50,7 @@ class ImagineCog(commands.Cog):
             height,
             seed
         )
-        self.queue.put((i, prompt_id))
+        self.queue.put((i, prompt_id, seed))
 
     async def queue_worker(self):
         while True:
@@ -58,9 +58,9 @@ class ImagineCog(commands.Cog):
                 await asyncio.sleep(1)
                 continue
 
-            i, prompt_id = self.queue.get()
+            i, prompt_id, seed = self.queue.get()
             if not self.generator.is_ready(prompt_id):
-                self.queue.put((i, prompt_id))
+                self.queue.put((i, prompt_id, seed))
                 continue
 
             images: list[bytes] = self.generator.get_result(prompt_id)
@@ -68,6 +68,6 @@ class ImagineCog(commands.Cog):
                 await i.edit_original_response(content="Wygląda na to, że coś poszło nie tak i niczego nie wygenerowano")
                 continue
 
-            await i.edit_original_response(content="Patrz co namalowałem", attachments=[
+            await i.edit_original_response(content=f"`seed: {seed}`", attachments=[
                 discord.File(io.BytesIO(image), filename=f"image_{i}.png") for i, image in enumerate(images)
             ])
