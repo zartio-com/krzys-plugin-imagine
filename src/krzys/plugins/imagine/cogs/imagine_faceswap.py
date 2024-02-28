@@ -38,7 +38,7 @@ class ImagineFaceSwapCog(commands.Cog):
             await i.edit_original_response(content="Nie udało się znaleźć twarzy na zdjęciu")
             return
 
-        prompt_id = self.generator.queue_prompt(positive_prompt, negative_prompt)
+        prompt_id = self.generator.queue_prompt(positive_prompt, negative_prompt, 1024, 1024, seed=0)
         self.queue.put((source_face, i, prompt_id))
 
     async def queue_worker(self):

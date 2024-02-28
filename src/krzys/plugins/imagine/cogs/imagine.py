@@ -1,13 +1,15 @@
 import asyncio
 import io
+import random
 from queue import Queue
+from typing import Literal
 
 import discord
 from discord.ext import commands
 from discord import app_commands
 
-from .. import config
 from ..generator_api import BaseGeneratorApi, ComfyUI
+from ..config import configuration
 
 
 class ImagineCog(commands.Cog):
@@ -18,14 +20,36 @@ class ImagineCog(commands.Cog):
         self.bot.loop.create_task(self.queue_worker())
 
     @app_commands.command(name="imagine")
-    async def imagine(self, i: discord.Interaction, positive_prompt: str, negative_prompt: str = ''):
+    async def imagine(
+            self,
+            i: discord.Interaction,
+            positive_prompt: str,
+            negative_prompt: str = '',
+            aspect_ratio: Literal['1:1', '2:3', '3:2', '16:9', '9:16'] = '2:3',
+            seed: int | None = None
+    ):
         r: discord.InteractionResponse = i.response
         try:
             await r.defer()
         except discord.errors.HTTPException:
             return
 
-        prompt_id = self.generator.queue_prompt(positive_prompt, negative_prompt)
+        seed = seed or random.randint(0, 100000000)
+
+        if aspect_ratio not in configuration.generation_sizes:
+            await i.edit_original_response(
+                content="Niepoprawna konfiguracja pluginu imagine - brak wymiarów dla podanego aspect ratio")
+            return
+
+        width, height = configuration.generation_sizes[aspect_ratio]
+
+        prompt_id = self.generator.queue_prompt(
+            positive_prompt,
+            negative_prompt,
+            width,
+            height,
+            seed
+        )
         self.queue.put((i, prompt_id))
 
     async def queue_worker(self):

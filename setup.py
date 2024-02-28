@@ -14,5 +14,6 @@ setup(
         ]
     },
     install_requires=[
+        'pydantic==1.10.11'
     ],
 )

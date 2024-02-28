@@ -3,23 +3,33 @@ import os
 import random
 from urllib import request, parse
 
+import krzys.core.config
+
 from .base import BaseGeneratorApi
 from .exception import PromptNotReadyException, BackendApiRequestException
-from .. import config
+from ..config import configuration
 
 
 class ComfyUI(BaseGeneratorApi):
-    _HOST: str = config.generator_host
+    _HOST: str = configuration.generator_host
 
     @staticmethod
-    def queue_prompt(positive_prompt: str, negative_prompt: str) -> str:
-        with open(config.comfyui_workflow, "r") as f:
+    def queue_prompt(
+            positive_prompt: str,
+            negative_prompt: str,
+            width: int,
+            height: int,
+            seed: int | None = None,
+    ) -> str:
+        with open(krzys.core.config.file_path('plugins', 'imagine', configuration.comfyui_workflow_file), "r") as f:
             workflow = f.read()
 
         workflow = json.loads(workflow.format(
             positive_prompt=positive_prompt.replace('"', '\\"'),
             negative_prompt=negative_prompt.replace('"', '\\"'),
-            seed=random.randint(0, 100000000)
+            width=width,
+            height=height,
+            seed=seed or random.randint(0, 100000000)
         ))
 
         # noinspection PyBroadException

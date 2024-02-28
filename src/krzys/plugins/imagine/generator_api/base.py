@@ -2,7 +2,13 @@
 
 class BaseGeneratorApi:
     @staticmethod
-    def queue_prompt(positive_prompt: str, negative_prompt: str) -> str:
+    def queue_prompt(
+            positive_prompt: str,
+            negative_prompt: str,
+            width: int,
+            height: int,
+            seed: int | None = None,
+    ) -> str:
         raise NotImplementedError()
 
     @staticmethod
