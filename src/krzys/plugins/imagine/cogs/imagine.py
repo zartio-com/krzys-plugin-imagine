@@ -25,7 +25,7 @@ class ImagineCog(commands.Cog):
             i: discord.Interaction,
             positive_prompt: str,
             negative_prompt: str = '',
-            aspect_ratio: Literal['1:1', '2:3', '3:2', '16:9', '9:16'] = '2:3',
+            aspect_ratio: Literal[tuple(list(configuration.generation_sizes.keys()))] = '2:3',
             seed: int | None = None
     ):
         r: discord.InteractionResponse = i.response
